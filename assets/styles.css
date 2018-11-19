@@ -1,0 +1,57 @@
+/*mobile first*/
+/*responsive first*/
+/*AA Compliant*/
+* {
+    box-sizing: border-box;
+  }
+  
+body {
+    font-family: 'Work Sans', sans-serif;
+    font-size: 18px;
+ }
+/*responsive first*/
+main {
+ 	width: 70%
+	margin: 0 auto;
+}
+/*check www.w3.org/WAI/tutorials
+***is the input type field sized for vision impairment*/
+
+form {
+	display: block
+}
+input[type="text"] {
+	border: 1px solid #ddd;
+	width:200px;
+	height:28px;
+}
+
+button, input[type="text"] {
+    padding: 7px;
+    border-radius: 4px;
+    text-align: center;
+	border: 2px solid #c6c6c6;
+}
+/*check www.w3.org/WAI/tutorials
+***background color is AAA accessible*/
+button:hover {
+    cursor: pointer;
+    background-color: black;
+	display: inline-block;
+	color: white;
+	
+}
+
+li {
+    list-style-type: none;
+    padding: 5px 5px 5px 5px;
+
+}
+
+.button {
+/*
+	background-color: limegreen;
+	color: white;
+*/
+}
+

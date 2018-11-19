@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<!--Added form element with labels for screen reader compatibility-->
+<html lang="en">
+<head>
+    <title>Not To Do List</title>
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" type="text/css" href="assets/styles.css">
+</head>
+<body>
+<!--style button with hover to green-->
+<!--change .keypress() to form.submit -->
+<!-- where is the user's input going to post? to a database or the browser? --u>
+     <header>
+     </header>
+<!--W3 SCHOOLS WAI
+   https://css-tricks.com/form-validation-web-audio/b
+    A label and a form control should be associated with each other either implicitly or explicitly. Web browsers provide the label as a larger clickable area, for example, to select or activate the control. It also ensures that assistive technology can refer to the correct label when presenting a form control.     -->
+<!-- 
+    The for attributfe of the label must exactly match the id of the form control.-->
+     <div class="container">
+     	<h1>Not To Do List</h1>
+
+ 		<form id="js-to-do-form" role="form" action="" method="post">
+			<p>Lorem Ipsum </p>
+			<label for="add-an-item">Add item</label>
+			<!-- improved the input element by including the 'name' attribute -->
+			<input type="text" name="add-an-item" id="js-add-item" placeholder= "eg., bounce a check" required>
+			<button class="button" type="submit">Submit</button>
+        </form>
+
+		<ul class="to-do-list js-to-do-list">
+			<li><span>Add</span><span>Delete</span>eat raw garlic</li>
+			<li><span>Add</span><span>Delete</span>forget car keys</li>
+			<li><span>Add</span><span>Delete</span>hit a pot hole</li>
+			<li><span>Add</span><span>Delete</span>wear shirts inside out</li>
+		</ul>
+     </div>  
+	<script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+	<script type="text/javascript" src="index.js"></script>
+</body>
+</html>
