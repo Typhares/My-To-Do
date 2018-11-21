@@ -1,65 +1,151 @@
+
+//Requirements
+//**managing state in jQuery web apps.
+//**Use DOM manipulation and traversal to dynamically add and remove HTML elements and apply styles.
+//**enter items they need to purchase by entering text and hitting "Return" or clicking the "Add item" button
+//**check and uncheck items on the list by clicking the "Check" button
+//**permanently remove items from the list
+//**Using this and event delegation
+//.submit(), event.preventDefault(), toggleClass(), and closest().
+//**create the state variable as an Array of item Objects containing properites. We can then call the .map method on the array to loop through each Obj and find it's index */
 'use strict';
-// ***REFACTOR USING <buttons> and one function to render the <li>
-//  *delete button
-//  *submit button
-//  * call a function to add items
-//  * two span items on each li,  style them with in-line block
-//  *add new list items to top, try using the array unshift method
-//  *JQuery Animations: visual clues for user, almost as if the app is "a training video"
-    //*when rendering a new list item, try to render each item as a different color
-    //*span element: when user hovers over the span (X or the button), style CSS so that on-hover changes to a hand icon
-    //*change span to in-line block 
+//HELP LINE 60
+let state = {
+	items: [
+//		{ name: "Return to TJMaxx", checked: false },
+//		{ name: "Paper BestBuy", checked: false }
+	]
+}
+ /*
+   * Create the HTML template for one todo item
+   * @param  {boolean} checked - true if checked, false if not
+   * @return {number} index - The index of the item in the store */
 
-//*** */global state object, an empty array. I can use Array Methods 'push or unshift' to add items to the top or bottom of array
-const state = [];
+let listItemTemplate = (
+  '<li>' +
+    '<span class="shopping-item js-shopping-item"></span>' +
+    '<div class="shopping-item-controls">' +
+      '<button class="js-shopping-item-toggle">' +
+        '<span class="button-label">check</span>' +
+      '</button>' +
+      '<button class="js-shopping-item-delete">' +
+        '<span class="button-label">delete</span>' +
+      '</button>' +
+    '</div>' +
+  '</li>'
+);
+/*
+Manage State 
+**can I reverse the order with state.items.unshift, pop() or shift (displayName: item, checkedOff: false)
+*/
+function addItem(state, item) {
+  state.items.push({
+    displayName: item,
+    checkedOff: false
+  });
+}
+//************BUG STARTS HERE WITH param named currentItemIndex
+function getItem(state, currentItemIndex) {
+	return state.items[currentItemIndex];
+}
 
-// pre populate the page with To-Do
+function deleteItem(state, currentItemIndex) {
+	return state.items.splice(currentItemIndex, 1)
+}
 
-//**** refactor this to a button rather than keypress not clear users */
-$("input[type='text']").keypress(function(event) { 
-    if(event.which === 13) {
-    //grab and save user to-do input 
-    let toDoText = $(this).val();
-    //passes as empty string to input value and clears the input field
-    $(this).val("");
-    //render a new li for the new input
-    $("ul").append("<li>" + "<span> X </span>" + toDoText + "</li>")
-  }       
-});
-// ***check out todos
-// can only add JQuery listener to an element that already exists when the page loads
-$("ul").on("click", "li", function() {
-    $(this).toggleClass("completed");
-});
+function updateItem(state, currentItemIndex, newStateItem) {
+	state.items[currentItemIndex] = newStateItem;
+}
+//DOM manipulation
+//The find method executes the callback function once for each index of the array until it finds one where callback returns a true value. If such an element is found, find immediately returns the value of that element. 
+function renderItem(item, itemId, itemTemplate, itemDataAttr ) {
+	let element = $(itemTemplate);
+//WHERE DOES SHOPPING LIST ITEM COME FROM
+	element.find('.js-shopping-item').text(item.displayName);
+	if (item.checkedOff) {
+		element.find('.js-shopping-item').addClass('shopping-item__checked');
+	}
+		element.find('js-shopping-item-toggle')
+		element.attr(itemDataAttr, itemId);
+		return element;
+}
+//LINE 76
+function renderElements (state, listElement, itemDataAttr) {
+	let renderedItems = state.items.map(
+    	function(item, index) {
+      		return renderItem(item, index, listItemTemplate, itemDataAttr);
+  	});
+  	listElement.html(itemsHTML);
+}
 
-//***User clicks on one item
-//***checks items by using conditional statement
-// $("li").click(function(){
-     // if the li is gray
-//     if ($(this).css("color") === "rgb(128, 128, 128)" ) {
-//     // turn it back to black
-//         // $(this).css("color", "black");
-//         $(this).css({
-//             color: "black",
-//             textDecoration: "none"
-//         });
-//     }
-//     else {
-//         $(this).css({
-//             color: "gray",
-//             textDecoration: "line-through"
-//         });
-//     }
-// });
+function renderList(state, listElement, itemDataAttr) {
+  let itemsHTML = state.items.map(
+	function(item, index) {
+      return renderItem(item, index, listItemTemplate, itemDataAttr);
+  	});
+	listElement.html(itemsHTML);
+}
 
-//***delete the to-do
-//***listen on an event that exists when the page loads
-$("ul").on("click", "span", function(event) {
-    // alert("clicked on a span");
-    $(this).parent().fadeOut(500, function(){
-        $(this).remove();
+//Event Listeners
+//what is the new element identifyer is that an HTML attributet
+//does state have to be passed as the last param
+function handleAddItems (formElement, newItemIdentifier, itemDataAttr, listElement, state) {
+  	formElement.submit(function(event){
+      event.preventDefault();
+      let newItem = formElement.find(newItemIdentifier).val();
+      addItem(state, newItem);
+      renderList(state, listElement, itemDataAttr);
+      // reset form
+      this.reset();
+  });
+}
+//	THIS IS WHERE THE BUG IS DOES THE local variable temIndex the same as the 
+function handleItemDeletes(formElement, removeIdentifyer, itemDataAttr, listElement, state) {
+	listElement.on("click", removeIdentifyer, function(event) {
+		let itemIndex = parseInt($(this).closest('li').attr(itemDataAttr));
+		deleteItem(state, itemIndex);
+		renderList(state, listElement, itemDataAttr);
+	})
+}
+	
+function handleItemToggles(listElement, toggleIdentifier, itemDataAttr, state) {
+  listElement.on('click', toggleIdentifier, function(event) {
+   	let itemId = $(event.currentTarget.closest('li')).attr(itemDataAttr);
+   	let oldItem = getItem(state, itemId);
+
+    updateItem(state, itemId, {
+      displayName: oldItem.displayName,
+      checkedOff: !oldItem.checkedOff
     });
-    //stops event from bubbling up to other elements
-    event.stopPropagation();
+    renderList(state, listElement, itemDataAttr)
+  });
+}
+
+$(function() {
+	let formElement = $('#js-shopping-list-form');
+	let listElement = $(".js-shopping-list");
+	  // from index.html -- it's the id of the input
+  // containing shopping list items
+	let newItemIdentifier = '#shopping-list-entry';
+	let removeIdentifyer = '.js-shopping-item-delete';
+	let itemDataAttr = 'data-list-item-id';
+	let toggleIdentifier = '.js-shopping-item-toggle';
+	
+	handleAddItems(formElement, newItemIdentifier, itemDataAttr, listElement, state);
+	handleItemDeletes( formElement, removeIdentifyer, itemDataAttr, listElement, state)
+	handleItemToggles(listElement, toggleIdentifier, itemDataAttr, state);
 });
+	
+
+
+
+
+
+
+
+
+
+
+
+
 

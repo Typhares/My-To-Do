@@ -1,0 +1,63 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  	font-family: 'Roboto', sans-serif;
+
+}
+
+button, input[type="text"] {
+  	display: inline-block;
+	padding: 5px;
+	border: 1px solid #a9d6a9;
+	height: 28px;
+	text-align: center;
+	border-radius: 4px;
+}
+
+button {
+	background-color: #00a82d;
+	color: white;
+}
+button:hover {
+  	cursor: pointer;
+	background-color: #017620;
+	display: inline-block;
+	color: white;
+}
+
+span 	{
+	display: inline-block;
+}
+#shopping-list-item {
+  width: 250px;
+}
+
+.container {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.shopping-list {
+  list-style: none;
+  padding-left: 0;
+}
+
+.shopping-list > li {
+  margin-bottom: 20px;
+  border: 1px solid grey;
+  padding: 20px;
+}
+
+.shopping-item {
+  display: block;
+  color: grey;
+  font-style: italic;
+  font-size: 20px;
+  margin-bottom: 15px;
+}
+
+.shopping-item__checked {
+  text-decoration: line-through;
+}
